@@ -1,14 +1,24 @@
 <script lang="ts">
+	import type { LayoutData } from './$types';
 	import '../app.postcss';
 	import NavItem from '../components/NavItem.svelte';
-	const user = {};
+	export let data: LayoutData;
+	const { user } = data;
 </script>
+
+<svelte:head>
+	<title>Bazaar</title>
+	<meta name="msapplication-TileColor" content="#da532c" />
+	<meta name="theme-color" content="#ffffff" />
+	<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
+	<link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+</svelte:head>
 
 <nav class="navbar bg-neutral text-neutral-content">
 	<div class="navbar-start">
 		{#if user}
 			<div class="dropdown">
-				<label tabindex={0} class="btn btn-ghost lg:hidden">
+				<label tabindex="0" class="btn btn-ghost lg:hidden">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-6 w-6 cursor-pointer md:hidden block"
@@ -17,17 +27,17 @@
 						stroke="currentColor"
 					>
 						<path
-							strokelinecap="round"
-							strokelinejoin="round"
-							strokewidth="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
 							d="M4 6h16M4 12h16M4 18h16"
 						/>
 					</svg>
 				</label>
-				<ul tabindex={0} class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-					<navitem to="offering" isactive={false}>Offering</navitem>
-					<navitem to="searching" isactive={false}>Searching For</navitem>
-					<navitem to="my-items" isactive={false}>My Items</navitem>
+				<ul class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+					<NavItem to="offering">Offering</NavItem>
+					<NavItem to="searching">Searching For</NavItem>
+					<NavItem to="my-items">My Items</NavItem>
 				</ul>
 			</div>
 		{/if}
@@ -36,15 +46,15 @@
 	<div class="navbar-center hidden lg:flex">
 		{#if user}
 			<ul class="menu menu-horizontal p-0">
-				<navitem to="offering">Offering</navitem>
-				<navitem to="searching">Searching For</navitem>
-				<navitem to="my-items">My Items</navitem>
+				<NavItem to="offering">Offering</NavItem>
+				<NavItem to="searching">Searching For</NavItem>
+				<NavItem to="my-items">My Items</NavItem>
 			</ul>
 		{/if}
 	</div>
 	<div class="navbar-end">
 		{#if user}
-			<div class="btn btn-ghost btn-circle avatar">
+			<div class="btn btn-ghost btn-circle avatar" title="{user.userDetails}">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					height="24px"
