@@ -1,0 +1,10 @@
+{
+	"configurations": {
+		"app": {
+			"apiLocation": "http://localhost:5173",
+			"appDevserverUrl": "http://localhost:5173",
+			"run": "vite dev",
+			"swaConfigLocation": "./build"
+		}
+	}
+}
