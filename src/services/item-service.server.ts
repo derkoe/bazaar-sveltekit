@@ -1,8 +1,7 @@
 import type { PagedAsyncIterableIterator, PageSettings } from '@azure/core-paging';
 import type { TableEntityResult, TableEntityResultPage } from '@azure/data-tables';
-import { AzureNamedKeyCredential, TableClient } from '@azure/data-tables';
-import 'dotenv/config';
 import { v4 as uuidv4 } from 'uuid';
+import { tableClient } from './table-client.server';
 
 export interface Item {
 	rowKey?: string;
@@ -10,18 +9,8 @@ export interface Item {
 	owner: string;
 }
 
-const STORAGE_ACCOUNT_NAME = process.env.STORAGE_ACCOUNT_NAME || 'poibazaardev';
-// TODO use managed idenity
-const STORAGE_ACCOUNT_KEY = process.env.STORAGE_ACCOUNT_KEY || '';
-
-const tableClient = new TableClient(
-	process.env.STORAGE_URL || `https://${STORAGE_ACCOUNT_NAME}.table.core.windows.net`,
-	'offering',
-	new AzureNamedKeyCredential(STORAGE_ACCOUNT_NAME, STORAGE_ACCOUNT_KEY)
-);
-
 export const loadItems = async () => {
-	const allItems = tableClient.listEntities<Item>();
+	const allItems = tableClient().listEntities<Item>();
 	return mapItems(allItems);
 };
 
@@ -31,7 +20,7 @@ export const loadUserItems = async (userId: string | undefined) => {
 	}
 
 	return mapItems(
-		tableClient.listEntities<Item>({ queryOptions: { filter: `owner eq '${userId}'` } })
+		tableClient().listEntities<Item>({ queryOptions: { filter: `owner eq '${userId}'` } })
 	);
 };
 
@@ -40,7 +29,7 @@ export const loadUserItem = async (userId: string | undefined, itemId: string | 
 		return undefined;
 	}
 
-	const item = await tableClient.getEntity<Item>('offering', itemId);
+	const item = await tableClient().getEntity<Item>('offering', itemId);
 
 	if (item.owner !== userId) {
 		return undefined;
@@ -51,7 +40,7 @@ export const loadUserItem = async (userId: string | undefined, itemId: string | 
 
 export const createItem = async (item: Partial<Item>) => {
 	const rowKey = uuidv4();
-	await tableClient.createEntity({ partitionKey: 'offering', rowKey, ...item });
+	await tableClient().createEntity({ partitionKey: 'offering', rowKey, ...item });
 	return rowKey;
 };
 
