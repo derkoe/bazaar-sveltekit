@@ -27,7 +27,16 @@ const config = {
 							}
 						}
 					}
-				}
+				},
+				routes: [
+					{
+						route: '/favicon.ico'
+					},
+					{
+						route: '/*',
+						rewrite: '/api/__render'
+					}
+				]
 			}
 		})
 	}
